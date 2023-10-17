@@ -1,0 +1,9 @@
+:valid{
+   color: greenyellow;
+}
+:invalid{
+    color: red;
+}
+.lathato {
+    display: none;
+}
