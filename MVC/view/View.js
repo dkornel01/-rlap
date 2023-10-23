@@ -9,9 +9,11 @@ class View{
 constructor(szuloElem,leiro){
     this.#leiro=leiro;
     this.#szuloElem=szuloElem;
-    this.#szuloElem.append("<form>")
+    this.#valid=true
+    this.#szuloElem.append("<form class=''>")
     this.formElem=this.#szuloElem.children("form")
-    this.#valaszto()
+    this.#htmlOsszealito()
+    //this.#valaszto()
     this.submitElem=$("#submit")
     this.submitElem.on("click",(event)=>{
         event.preventDefault()
@@ -21,20 +23,21 @@ constructor(szuloElem,leiro){
             this.#valid=this.#valid && elem.valid
         })
         if (this.#valid){
-            console.log("valid az űrlap")
+            /*console.log("valid az űrlap")
             this.#urlapElemList.forEach((elem)=>{
             let ertek=elem.ertek
             let kulcs=elem.key
             this.#urlapAdatok[kulcs]=ertek;
             console.log("volt")
             console.log(this.#urlapAdatok)
-        })
+            })*/
+            this.#adatGyujt();
         }else{
             console.log("Nem valid az űrlap")
         }
     })
 }
-    #valaszto(){
+    /*#valaszto(){
     for (const key in this.#leiro) {
     switch(this.#leiro[key].type){
         case "text":
@@ -47,8 +50,42 @@ constructor(szuloElem,leiro){
 
             }
         }
+    }*/
+    #adatGyujt() {
+        this.#urlapElemList.forEach((element) => {
+            this.#urlapAdatok[element.kulcs] = element.value;
+        });
+        console.log(this.#urlapAdatok);
     }
-    #numberElem(key){
+    #htmlOsszealito(){
+        {
+            for (const key in this.#leiro) {
+                switch (this.#leiro[key].tipus) {
+                    case "text":
+                        this.#urlapElemList.push(
+                            new UrlapTextElem(
+                                this.#leiro[key],
+                                key,
+                                this.formElem
+                            )
+                        );
+                        break;
+                    case "number":
+                        this.#urlapElemList.push(
+                            new UrlapNumberElem(
+                                this.#leiro[key],
+                                key,
+                                this.formElem
+                            )
+                        );
+                        break;
+                    default:
+                    // code block
+                }
+            }
+            this.formElem.append("<input type='submit' id='submit' value='OK'>");
+    }
+    /*#numberElem(key){
         let txt="";
             txt+=` 
             <div class="mb-3 mt-3">
@@ -66,6 +103,7 @@ constructor(szuloElem,leiro){
             </div>
             `
             this.formElem.append(txt)
+    }*/
     }
 }
 export default View

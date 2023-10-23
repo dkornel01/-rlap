@@ -20,37 +20,58 @@ class TextUrlapElem{
                 this.#valid=true
                 this.validElem.addClass("lathatosag")
                 this.invalidElem.removeClass("lathatosag")
+                this.validElem.html("OK");
+                this.#valid = true;
             }
             else{
             this.#valid=false
             this.validElem.removeClass("lathatosag")
             this.invalidElem.addClass("lathatosag")
+            this.invalidElem.html(this.#elemLeiro.szoveg);
             }
         })
         //this.#numberElem()
     }
     #urlapletrehoz(){
-        let txt="";
-        txt+=` 
-            <div class="mb-3 mt-3">
-              <label for="${this.#key}" 
-              class="form-label>"${this.#elemLeiro.megj}":</label>
-              <input type="${this.#elemLeiro.type}" 
-              class="form-control" id="${this.#key}" 
-              placeholder="${this.#elemLeiro.placeholder}" 
-              name="${this.#key}"
-              value="${this.#elemLeiro.value}"
-              pattern="${this.#elemLeiro.regex}">
-              <div class="valid lathato">Ok</div>
-              <div class=invalid lathato">${this.#elemLeiro.valid}"</div>
-            </div>
-            `
-        txt+="<input type='submit' value='ok'>"
-        this.formElem.append(txt)
-        
+        let txt = `<div id="${this.#key}blokk" class="mb-3 mt-3">
+                        <label for="${this.#key}" class="form-label">${
+            this.#elemLeiro.megjelenes
+        }</label>
+                        <input type="${this.#elemLeiro.tipus}" 
+                               id="${this.#key}" 
+                               placeholder="${this.#elemLeiro.placeholder}" 
+                               name="${this.#key}" 
+                              
+                               class="form-control" >
+                        <div class="valid">valid</div>
+                        <div class="invalid">  invalid</div>
+                    </div>`;
+        this.formElem.append(txt);
+        this.inputElem = $(`#${this.#key}`);
+        this.inputElem.attr(
+            "required",
+            this.#elemLeiro.required ? "required" : null
+        );
+
+        this.validElem = this.formElem
+            .children("div:last-child")
+            .children(".valid");
+        this.invalidElem = this.formElem
+            .children("div:last-child")
+            .children(".invalid");
+
+        this.invalidElem.addClass("invalid-visible");
+        this.validElem.addClass("valid-visible");
     }
+        
     get valid(){
-        return this.#valid
+        if (this.#elemLeiro.required && this.inputElem.val() == "") {
+            this.#valid = false;
+            this.invalidElem.removeClass("invalid-visible");
+            this.validElem.addClass("valid-visible");
+            this.invalidElem.html(" Az elem kötelező!");
+        }
+        return this.#valid;
     }
     get ertek(){
         return this.#ertek
